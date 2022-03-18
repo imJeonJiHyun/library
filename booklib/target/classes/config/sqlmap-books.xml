@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="libraryDAO">
+	<select id="selectAll" resultType="libraryDTO">
+		select * from "LIBRARY" order by "NUM"
+	</select>
+	<select id="selectByName" parameterType="String" resultType="libraryDTO">
+		select * from "LIBRARY" where NAME like '%'||#{name}||'%' order by "NUM"
+	</select>
+	<select id="selectByWriter" parameterType="String" resultType="libraryDTO">
+		select * from "LIBRARY" where WRITER like '%'||#{writer}||'%' order by "NUM"
+	</select>
+	<select id="selectByPublisher" parameterType="String" resultType="libraryDTO">
+		select * from "LIBRARY" where PUBLISHER like '%'||#{publisher}||'%' order by "NUM"
+	</select>
+	<select id="selectByGenre" parameterType="String" resultType="libraryDTO">
+		select * from "LIBRARY" where GENRE like '%'||#{genre}||'%' order by "NUM"
+	</select>
+	<select id="count" resultType="Integer">
+		select count(*) from "LIBRARY"
+	</select>
+	<select id="selectIntroduction" parameterType="Long" resultType="libraryDTO">
+		select * from "LIBRARY" where "NUM" = #{num}
+	</select>
+	<select id="selectByIsbn" parameterType="Long" resultType="libraryDTO">
+		select * from "LIBRARY" where "ISBN" = #{isbn}
+	</select>
+	<update id="update" parameterType="libraryDTO">
+		update "LIBRARY"
+		set ISBN=#{isbn}, NAME=#{name},
+		WRITER=#{writer}, PUBLISHER=#{publisher}, GENRE=#{genre}, PRICE=#{price},
+		INTRODUCTION=#{introduction}, ORIFILENAME=#{orifilename}, SAVEDFILENAME=#{savedfilename} where "NUM"=#{num}
+	</update>
+	<delete id="delete" parameterType="Long">
+		delete from "LIBRARY" where NUM=#{num}
+	</delete>
+	<insert id="insert" parameterType="libraryDTO">
+		insert into "LIBRARY"(NUM, ISBN, NAME, WRITER, PUBLISHER, GENRE, PRICE, INTRODUCTION, ORIFILENAME, SAVEDFILENAME) values
+		(LIBRARY_SEQ.nextval, #{isbn}, #{name}, #{writer}, #{publisher}, #{genre}, #{price}, #{introduction}, #{orifilename}, #{savedfilename})
+		<selectKey keyProperty="num" resultType="Long">
+			select nvl(max(num), 0) from "LIBRARY"		
+		</selectKey>
+	</insert>
+</mapper>
